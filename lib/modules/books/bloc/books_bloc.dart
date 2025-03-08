@@ -31,7 +31,6 @@ class BooksBloc extends Bloc<BooksEvent, BooksState> {
     try {
       emit(const BooksLoading());
       final List<Book> books = await _booksRepo.fetchBooks(st.filterBy, event.query);
-      print('Bools: ${books.length}');
       emit(BooksLoaded(filterBy: st.filterBy, query: st.query, books: books));
     } catch (e) {
       print('Error fetching books: ${e.toString()}');

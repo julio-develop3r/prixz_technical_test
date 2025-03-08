@@ -1,7 +1,7 @@
 import 'package:app/models/user.dart';
-import 'package:app/modules/user_edit/user_edit_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 
 import 'cubit/user_info_cubit.dart';
 
@@ -74,12 +74,7 @@ class _View extends StatelessWidget {
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute<String?>(builder: (_) => const UserEditPage()),
-                    );
-                  },
+                  onPressed: () => context.go('/user-edit'),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.green,
                     foregroundColor: Colors.white,

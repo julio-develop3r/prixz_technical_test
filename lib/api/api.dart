@@ -37,8 +37,6 @@ class Api {
     Response<dynamic> res;
 
     try {
-      // res = await _dio.get('search.json?q=the+lord+of+the+rings');
-      print(action);
       res = await _dio.get(action);
 
       return ApiResponse.fromJson(res.data);

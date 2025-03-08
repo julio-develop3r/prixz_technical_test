@@ -1,10 +1,11 @@
-import 'package:app/modules/user_edit/user_edit_page.dart';
-import 'package:app/modules/user_info/user_info_page.dart';
+import 'package:app/router/app_router.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
 void main() {
+  AppRouter.i;
+
   runApp(const MyApp());
 }
 
@@ -13,7 +14,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return MaterialApp.router(
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: ThemeData(colorScheme: ColorScheme.fromSeed(seedColor: Colors.red)),
@@ -25,19 +26,7 @@ class MyApp extends StatelessWidget {
         DefaultCupertinoLocalizations.delegate,
       ],
       supportedLocales: const <Locale>[Locale('en', ''), Locale('es', '')],
-      home: const MainPage(),
-    );
-  }
-}
-
-class MainPage extends StatelessWidget {
-  const MainPage({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(centerTitle: true, title: const Text('Prix Technical Test')),
-      body: const UserInfoPage(),
+      routerConfig: AppRouter.router,
     );
   }
 }

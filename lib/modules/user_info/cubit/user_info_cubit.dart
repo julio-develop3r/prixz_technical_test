@@ -14,12 +14,9 @@ class UserInfoCubit extends Cubit<UserInfoState> {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
 
     try {
-      await prefs.remove(userInfoKey);
       final String? value = prefs.getString(userInfoKey);
-      print('value: $value');
-      final Map<String, dynamic> js = json.decode(value ?? '{}');
-      print('json: $json');
-      emit(UserInfoLoaded(UserInfo.fromJson(js)));
+      final Map<String, dynamic> json = jsonDecode(value ?? '{}');
+      emit(UserInfoLoaded(UserInfo.fromJson(json)));
     } catch (e) {
       emit(UserInfoError(e.toString()));
     }

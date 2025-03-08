@@ -45,7 +45,6 @@ class UserEditCubit extends Cubit<UserEditState> {
       final Map<String, dynamic> json = state.userInfo.toJson();
 
       await prefs.setString(userInfoKey, jsonEncode(json));
-      print('jalo');
     } catch (e) {
       print(e);
     }

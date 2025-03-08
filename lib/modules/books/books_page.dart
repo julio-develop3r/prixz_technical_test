@@ -2,8 +2,8 @@ import 'package:app/models/book.dart';
 import 'package:app/repositories/books_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 
-import '../book_details/book_details_page.dart';
 import 'bloc/books_bloc.dart';
 
 class BooksPage extends StatelessWidget {
@@ -11,10 +11,8 @@ class BooksPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print('****************BooksPage');
     return BlocProvider<BooksBloc>(
       create: (_) => BooksBloc(BooksRepository())..add(const FetchBooks()),
-      lazy: false, // ! quitarlo
       child: const _View(),
     );
   }
@@ -30,7 +28,7 @@ class _View extends StatelessWidget {
         if (state is! BooksLoaded) {
           return const CircularProgressIndicator();
         }
-        print('********* ${state.filterBy}');
+        
         return Column(
           children: <Widget>[
             SizedBox(
@@ -71,14 +69,7 @@ class _View extends StatelessWidget {
                             subtitle: Text('${e.authorName}'),
                             trailing: IconButton(
                               iconSize: 40,
-                              onPressed: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute<void>(
-                                    builder: (BuildContext context) => BookDetailsPage(e),
-                                  ),
-                                );
-                              },
+                              onPressed: () => context.push('/book-details', extra: e),
                               icon: const Icon(Icons.keyboard_arrow_right),
                             ),
                           ),
