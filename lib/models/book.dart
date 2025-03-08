@@ -2,6 +2,8 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'book.g.dart';
 
+enum Filters { title, author }
+
 @JsonSerializable()
 class Book {
   Book({

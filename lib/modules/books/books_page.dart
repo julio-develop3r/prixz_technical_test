@@ -29,7 +29,7 @@ class _View extends StatelessWidget {
     return BlocBuilder<BooksBloc, BooksState>(
       builder: (_, BooksState state) {
         if (state is! BooksLoaded) {
-          return const CircularProgressIndicator();
+          return const Center(child: CircularProgressIndicator());
         }
 
         return Column(

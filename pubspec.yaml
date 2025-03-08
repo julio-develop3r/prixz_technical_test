@@ -18,12 +18,14 @@ dependencies:
   shared_preferences: ^2.3.5
 
 dev_dependencies:
+  bloc_test: ^10.0.0
   build_runner: ^2.4.15
   flutter_localizations:
     sdk: flutter
   flutter_test:
     sdk: flutter
   json_serializable: ^6.9.4
+  mocktail: ^1.0.4
 
 flutter:
   uses-material-design: true

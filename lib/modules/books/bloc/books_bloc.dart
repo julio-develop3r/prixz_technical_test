@@ -14,8 +14,6 @@ EventTransformer<Event> debounceTime<Event>({
       events.debounceTime(duration).flatMap(mapper);
 }
 
-enum Filters { title, author }
-
 class BooksBloc extends Bloc<BooksEvent, BooksState> {
   BooksBloc(this._booksRepo)
     : super(const BooksLoaded(filterBy: Filters.title, query: '', books: <Book>[])) {

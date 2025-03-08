@@ -1,5 +1,3 @@
-import 'package:app/modules/books/bloc/books_bloc.dart';
-
 import '../api/api.dart';
 import '../models/api_response.dart';
 import '../models/book.dart';
@@ -12,7 +10,7 @@ class BooksRepository {
 
   String _parseParams(String action, Filters filter, String query) {
     if (query.isEmpty) {
-      return action;
+      return '$action?q=the+lord+of+the+rings';
     }
 
     if (filter == Filters.title) {
