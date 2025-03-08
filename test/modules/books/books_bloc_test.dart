@@ -18,15 +18,12 @@ void main() {
 
   group(BooksBloc, () {
     test('initial state is [BooksLoaded]', () {
-      expect(
-        booksBloc.state,
-        equals(const BooksLoaded(books: <Book>[], filterBy: Filters.title, query: '')),
-      );
+      expect(booksBloc.state, equals(const BooksLoaded(books: <Book>[], filterBy: Filters.title)));
     });
 
     blocTest<BooksBloc, BooksState>(
       'emits [BooksLoaded] when FetchBooks is added and succeeds',
-      seed: () => const BooksLoaded(books: <Book>[], filterBy: Filters.author, query: ''),
+      seed: () => const BooksLoaded(books: <Book>[], filterBy: Filters.author),
       setUp: () {
         when(
           () => mockBooksRepo.fetchBooks(Filters.author, any<String>()),
@@ -35,17 +32,6 @@ void main() {
       build: () => booksBloc,
       act: (BooksBloc bloc) => bloc.add(const FetchBooks()),
       expect: () => <TypeMatcher<BooksState>>[isA<BooksLoading>(), isA<BooksLoaded>()],
-    );
-
-    blocTest<BooksBloc, BooksState>(
-      'emits [BooksLoaded] when SetFilterBy is added and succeeds',
-      seed: () => const BooksLoaded(books: <Book>[], filterBy: Filters.author, query: ''),
-      build: () => booksBloc,
-      act: (BooksBloc bloc) => bloc.add(const SetFilterBy(Filters.title)),
-      expect:
-          () => <BooksLoaded>[
-            const BooksLoaded(books: <Book>[], filterBy: Filters.title, query: ''),
-          ],
     );
   });
 }

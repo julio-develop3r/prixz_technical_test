@@ -9,14 +9,12 @@ class BooksRepository {
   }
 
   String _parseParams(String action, Filters filter, String query) {
-    if (query.isEmpty) {
-      return '$action?q=the+lord+of+the+rings';
-    }
+    final String q = query.isNotEmpty ? query : 'J.R.R. Tolkien';
 
     if (filter == Filters.title) {
-      return '$action?title=$query&limit=10';
+      return '$action?title=$q&limit=10';
     }
 
-    return '$action?author=$query&limit=10';
+    return '$action?author=$q&limit=10';
   }
 }

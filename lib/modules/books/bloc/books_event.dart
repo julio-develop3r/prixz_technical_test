@@ -4,23 +4,15 @@ sealed class BooksEvent extends Equatable {
   const BooksEvent();
 
   @override
-  List<Object> get props => <Object>[];
+  List<Object?> get props => <Object>[];
 }
 
 class FetchBooks extends BooksEvent {
-  const FetchBooks({this.query = ''});
+  const FetchBooks({this.filterBy, this.query});
 
-  final String query;
-
-  @override
-  List<Object> get props => <Object>[query];
-}
-
-class SetFilterBy extends BooksEvent {
-  const SetFilterBy(this.value);
-
-  final Filters value;
+  final Filters? filterBy;
+  final String? query;
 
   @override
-  List<Object> get props => <Object>[value];
+  List<Object?> get props => <Object?>[filterBy, query];
 }

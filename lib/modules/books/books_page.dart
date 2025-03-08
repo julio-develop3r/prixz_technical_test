@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 import 'bloc/books_bloc.dart';
+import 'filter_widget.dart';
 
 class BooksPage extends StatelessWidget {
   const BooksPage({super.key});
@@ -26,63 +27,82 @@ class _View extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<BooksBloc, BooksState>(
-      builder: (_, BooksState state) {
-        if (state is! BooksLoaded) {
-          return const Center(child: CircularProgressIndicator());
-        }
+    return const Padding(
+      padding: EdgeInsets.all(8.0),
+      child: Column(
+        children: <Widget>[
+          FilterWidget(), //
+          SizedBox(height: 8),
+          _ListWidget(),
+        ],
+      ),
+    );
+  }
+}
 
-        return Column(
+class _ListWidget extends StatelessWidget {
+  const _ListWidget();
+
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      child: BlocBuilder<BooksBloc, BooksState>(
+        builder: (_, BooksState state) {
+          if (state is! BooksLoaded) {
+            return const Center(child: CircularProgressIndicator());
+          }
+
+          if (state.books.isEmpty) {
+            return const Center(child: Text('No results :('));
+          }
+
+          return GridView.builder(
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
+            itemCount: state.books.length,
+            itemBuilder: (_, int index) => _BookWidget(state.books[index]),
+          );
+        },
+      ),
+    );
+  }
+}
+
+class _BookWidget extends StatelessWidget {
+  const _BookWidget(this.book);
+
+  final Book book;
+
+  @override
+  Widget build(BuildContext context) {
+    final String? imageUrl = book.getBookImageUrl();
+
+    return Card(
+      child: InkWell(
+        onTap: () => context.push(BookDetailsPage.route, extra: book),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
-            SizedBox(
-              width: double.infinity,
-              child: Row(
-                children: <Widget>[
-                  DropdownButton<Filters>(
-                    value: state.filterBy,
-                    items: const <DropdownMenuItem<Filters>>[
-                      DropdownMenuItem<Filters>(value: Filters.title, child: Text('By title')),
-                      DropdownMenuItem<Filters>(value: Filters.author, child: Text('By author')),
-                    ],
-                    onChanged: (Filters? value) {
-                      context.read<BooksBloc>().add(SetFilterBy(value ?? Filters.title));
-                    },
-                  ),
-                  Expanded(
-                    child: TextField(
-                      decoration: const InputDecoration(
-                        border: OutlineInputBorder(),
-                        hintText: 'Search',
-                      ),
-                      onChanged: (String value) {
-                        context.read<BooksBloc>().add(FetchBooks(query: value));
-                      },
-                    ),
-                  ),
-                ],
-              ),
+            if (imageUrl != null)
+              Expanded(child: Image.network(imageUrl))
+            else
+              const Expanded(child: Icon(Icons.my_library_books_rounded, size: 60)),
+            Text(
+              '${book.title}',
+              style: Theme.of(context).textTheme.titleMedium,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              textAlign: TextAlign.center,
             ),
-            Expanded(
-              child: ListView(
-                children:
-                    state.books
-                        .map(
-                          (Book e) => ListTile(
-                            title: Text('${e.title}'),
-                            subtitle: Text('${e.authorName}'),
-                            trailing: IconButton(
-                              iconSize: 40,
-                              onPressed: () => context.push(BookDetailsPage.route, extra: e),
-                              icon: const Icon(Icons.keyboard_arrow_right),
-                            ),
-                          ),
-                        )
-                        .toList(),
-              ),
+            Text(
+              book.getAuthorsNames(),
+              style: Theme.of(context).textTheme.bodyMedium,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              textAlign: TextAlign.center,
             ),
           ],
-        );
-      },
+        ),
+      ),
     );
   }
 }

@@ -8,17 +8,15 @@ part 'books_event.dart';
 part 'books_state.dart';
 
 EventTransformer<Event> debounceTime<Event>({
-  Duration duration = const Duration(milliseconds: 400),
+  Duration duration = const Duration(milliseconds: 150),
 }) {
   return (Stream<Event> events, Stream<Event> Function(Event) mapper) =>
       events.debounceTime(duration).flatMap(mapper);
 }
 
 class BooksBloc extends Bloc<BooksEvent, BooksState> {
-  BooksBloc(this._booksRepo)
-    : super(const BooksLoaded(filterBy: Filters.title, query: '', books: <Book>[])) {
+  BooksBloc(this._booksRepo) : super(const BooksLoaded(filterBy: Filters.title, books: <Book>[])) {
     on<FetchBooks>(_onFetchBooks, transformer: debounceTime());
-    on<SetFilterBy>(_onSetFilterBy);
   }
 
   final BooksRepository _booksRepo;
@@ -28,16 +26,14 @@ class BooksBloc extends Bloc<BooksEvent, BooksState> {
 
     try {
       emit(const BooksLoading());
-      final List<Book> books = await _booksRepo.fetchBooks(st.filterBy, event.query);
-      emit(BooksLoaded(filterBy: st.filterBy, query: st.query, books: books));
+
+      final Filters filter = event.filterBy ?? st.filterBy;
+      final String query = event.query ?? st.query;
+      final List<Book> books = await _booksRepo.fetchBooks(filter, query);
+
+      emit(BooksLoaded(filterBy: filter, books: books, query: query));
     } catch (e) {
       print('Error fetching books: ${e.toString()}');
     }
-  }
-
-  void _onSetFilterBy(SetFilterBy event, Emitter<BooksState> emit) {
-    final BooksLoaded st = state as BooksLoaded;
-
-    emit(st.copyWith(filterBy: event.value));
   }
 }

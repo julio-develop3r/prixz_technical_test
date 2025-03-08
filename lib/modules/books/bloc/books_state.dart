@@ -16,22 +16,14 @@ final class BooksLoading extends BooksState {
 }
 
 final class BooksLoaded extends BooksState {
-  const BooksLoaded({required this.books, required this.filterBy, required this.query});
+  const BooksLoaded({required this.books, required this.filterBy, this.query = ''});
 
   final List<Book> books;
   final Filters filterBy;
   final String query;
 
-  BooksState copyWith({Filters? filterBy, String? query}) {
-    return BooksLoaded(
-      filterBy: filterBy ?? this.filterBy,
-      query: query ?? this.query,
-      books: books,
-    );
-  }
-
   @override
-  List<Object> get props => <Object>[books, filterBy];
+  List<Object> get props => <Object>[books, filterBy, query];
 }
 
 final class BooksError extends BooksState {
