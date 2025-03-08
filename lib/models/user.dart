@@ -5,6 +5,8 @@ part 'user.g.dart';
 
 enum Gender { male, female, other }
 
+const String userInfoKey = 'userInfo';
+
 abstract interface class IUser {
   String? get names;
   String? get lastNames;

@@ -1,12 +1,14 @@
+import 'dart:convert';
+
 import 'package:app/models/user.dart';
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-part 'user_validator_state.dart';
+part 'user_edit_state.dart';
 
-class UserValidatorCubit extends Cubit<UserValidatorState> {
-  UserValidatorCubit() : super(const UserValidatorState());
+class UserEditCubit extends Cubit<UserEditState> {
+  UserEditCubit() : super(const UserEditState());
 
   void updateNames(String value) {
     emit(state.copyWith(userInfo: state.userInfo.copyWith(names: value)));
@@ -40,7 +42,9 @@ class UserValidatorCubit extends Cubit<UserValidatorState> {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
 
     try {
-      await prefs.setString('userInfo', state.userInfo.toJson().toString());
+      final Map<String, dynamic> json = state.userInfo.toJson();
+
+      await prefs.setString(userInfoKey, jsonEncode(json));
       print('jalo');
     } catch (e) {
       print(e);

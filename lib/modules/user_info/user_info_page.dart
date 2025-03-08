@@ -1,163 +1,104 @@
 import 'package:app/models/user.dart';
-import 'package:app/modules/user_info/cubit/user_validator_cubit.dart';
+import 'package:app/modules/user_edit/user_edit_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'validator.dart';
-
-// import 'validator.dart';
+import 'cubit/user_info_cubit.dart';
 
 class UserInfoPage extends StatelessWidget {
   const UserInfoPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider<UserValidatorCubit>(create: (_) => UserValidatorCubit(), child: _View());
+    return BlocProvider<UserInfoCubit>(
+      create: (_) => UserInfoCubit()..init(),
+      child: const _View(),
+    );
   }
 }
 
-class _View extends StatelessWidget with Validator {
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+class _View extends StatelessWidget {
+  const _View();
 
   @override
   Widget build(BuildContext context) {
-    final UserValidatorCubit cubit = context.read<UserValidatorCubit>();
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: BlocBuilder<UserInfoCubit, UserInfoState>(
+        builder: (_, UserInfoState state) {
+          if (state is UserInfoError) {
+            return Center(child: Text(state.error));
+          }
 
-    return BlocBuilder<UserValidatorCubit, UserValidatorState>(
-      builder: (_, UserValidatorState state) {
-        return Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Form(
-            key: _formKey,
-            autovalidateMode: state.autovalidateMode,
-            child: Column(
-              children: <Widget>[
-                Expanded(
-                  child: SingleChildScrollView(
-                    child: Column(
-                      children: <Widget>[
-                        TextFormField(
-                          validator: validateNoEmpty,
-                          decoration: InputDecoration(
-                            hintText: 'Names',
-                            border: OutlineInputBorder(borderRadius: BorderRadius.circular(20)),
-                          ),
-                          onChanged: (String value) => cubit.updateNames(value),
-                        ),
-                        const SizedBox(height: 8),
-                        TextFormField(
-                          validator: validateNoEmpty,
-                          decoration: InputDecoration(
-                            hintText: 'LastNames',
-                            border: OutlineInputBorder(borderRadius: BorderRadius.circular(20)),
-                          ),
-                          onChanged: (String value) => cubit.updateLastNames(value),
-                        ),
-                        const SizedBox(height: 8),
-                        TextFormField(
-                          validator: validateNoEmpty,
-                          decoration: InputDecoration(
-                            hintText: 'Phone',
-                            border: OutlineInputBorder(borderRadius: BorderRadius.circular(20)),
-                          ),
-                          onChanged: (String value) => cubit.updatePhone(value),
-                        ),
+          if (state is! UserInfoLoaded) {
+            return const Center(child: CircularProgressIndicator());
+          }
 
-                        const SizedBox(height: 8),
-                        TextFormField(
-                          validator: validateNoEmpty,
-                          decoration: InputDecoration(
-                            hintText: 'Email',
-                            border: OutlineInputBorder(borderRadius: BorderRadius.circular(20)),
-                          ),
-                          onChanged: (String value) => cubit.updateEmail(value),
-                        ),
-                        const SizedBox(height: 8),
-                        Row(
-                          children: <Widget>[
-                            const Text('BirthDate:'),
-                            const SizedBox(width: 8),
-                            ElevatedButton(
-                              onPressed: () async {
-                                final DateTime now = DateTime.now();
-                                final DateTime? selectedDate = await showDatePicker(
-                                  context: context,
-                                  initialDate: state.userInfo.birthDate ?? now,
-                                  firstDate: DateTime(1900),
-                                  lastDate: now,
-                                  locale: const Locale('es', 'ES'),
-                                );
-
-                                if (selectedDate != null) {
-                                  cubit.updateBirthDate(selectedDate);
-                                }
-                              },
-                              child: const Text('Select date'),
-                            ),
-                          ],
-                        ),
-
-                        if (state.userInfo.birthDate != null) ...<Widget>[
-                          const SizedBox(height: 8),
-                          Row(
-                            children: <Widget>[
-                              Text('${state.userInfo.birtDateFormated()} - '),
-                              Text('${state.userInfo.currentAge()} years old'),
-                            ],
-                          ),
-                        ],
-
-                        const SizedBox(height: 8),
-                        Row(
-                          children: <Widget>[
-                            const Text('Gender:'),
-                            const SizedBox(width: 8),
-                            DropdownButton<Gender>(
-                              value: state.userInfo.gender,
-                              items: const <DropdownMenuItem<Gender>>[
-                                DropdownMenuItem<Gender>(value: Gender.male, child: Text('Male')),
-                                DropdownMenuItem<Gender>(
-                                  value: Gender.female,
-                                  child: Text('Female'),
-                                ),
-                                DropdownMenuItem<Gender>(value: Gender.other, child: Text('Other')),
-                              ],
-                              onChanged: (Gender? gender) {
-                                if (gender != null) {
-                                  cubit.updateGender(gender);
-                                }
-                              },
-                            ),
-                          ],
-                        ),
-                      ],
+          return Column(
+            children: [
+              Expanded(
+                child: Column(
+                  spacing: 16,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Center(
+                      child: Text('User Info', style: Theme.of(context).textTheme.headlineMedium),
                     ),
-                  ),
-                ),
-                SizedBox(
-                  width: double.infinity,
-                  child: ElevatedButton(
-                    onPressed: () {
-                      if (_formKey.currentState!.validate()) {
-                        context.read<UserValidatorCubit>().saveInfo();
-                      } else {
-                        context.read<UserValidatorCubit>().updateAutovalidateMode(
-                          AutovalidateMode.always,
-                        );
-                      }
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.green,
-                      foregroundColor: Colors.white,
+                    Text(
+                      'Names: ${state.userInfo.names ?? 'N/A'}',
+                      style: Theme.of(context).textTheme.titleMedium,
                     ),
-                    child: const Text('Save'),
-                  ),
+                    Text(
+                      'Last Names: ${state.userInfo.lastNames ?? 'N/A'}',
+                      style: Theme.of(context).textTheme.titleMedium,
+                    ),
+                    Text(
+                      'Phone: ${state.userInfo.phone ?? 'N/A'}',
+                      style: Theme.of(context).textTheme.titleMedium,
+                    ),
+                    Text(
+                      'Email: ${state.userInfo.email ?? 'N/A'}',
+                      style: Theme.of(context).textTheme.titleMedium,
+                    ),
+                    Text(
+                      'Birth Date: ${_getBirthText(state.userInfo)}',
+                      style: Theme.of(context).textTheme.titleMedium,
+                    ),
+                    Text(
+                      'Gender: ${state.userInfo.gender ?? 'N/A'}',
+                      style: Theme.of(context).textTheme.titleMedium,
+                    ),
+                  ],
                 ),
-              ],
-            ),
-          ),
-        );
-      },
+              ),
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute<String?>(builder: (_) => const UserEditPage()),
+                    );
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.green,
+                    foregroundColor: Colors.white,
+                  ),
+                  child: const Text('Edit'),
+                ),
+              ),
+            ],
+          );
+        },
+      ),
     );
+  }
+
+  String _getBirthText(UserInfo user) {
+    if (user.birthDate == null) {
+      return 'N/A';
+    }
+
+    return '${user.birtDateFormated()} (${user.currentAge()} years old)';
   }
 }
