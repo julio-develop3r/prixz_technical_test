@@ -3,6 +3,7 @@ import 'package:app/repositories/books_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../book_details/book_details_page.dart';
 import 'bloc/books_bloc.dart';
 
 class BooksPage extends StatelessWidget {
@@ -31,16 +32,16 @@ class _View extends StatelessWidget {
         }
         print('********* ${state.filterBy}');
         return Column(
-          children: [
+          children: <Widget>[
             SizedBox(
               width: double.infinity,
               child: Row(
-                children: [
-                  DropdownButton(
+                children: <Widget>[
+                  DropdownButton<Filters>(
                     value: state.filterBy,
-                    items: const [
-                      DropdownMenuItem(value: Filters.title, child: Text('By title')),
-                      DropdownMenuItem(value: Filters.author, child: Text('By author')),
+                    items: const <DropdownMenuItem<Filters>>[
+                      DropdownMenuItem<Filters>(value: Filters.title, child: Text('By title')),
+                      DropdownMenuItem<Filters>(value: Filters.author, child: Text('By author')),
                     ],
                     onChanged: (Filters? value) {
                       context.read<BooksBloc>().add(SetFilterBy(value ?? Filters.title));
@@ -48,7 +49,10 @@ class _View extends StatelessWidget {
                   ),
                   Expanded(
                     child: TextField(
-                      decoration: InputDecoration(border: OutlineInputBorder(), hintText: 'Search'),
+                      decoration: const InputDecoration(
+                        border: OutlineInputBorder(),
+                        hintText: 'Search',
+                      ),
                       onChanged: (String value) {
                         context.read<BooksBloc>().add(FetchBooks(query: value));
                       },
@@ -65,6 +69,18 @@ class _View extends StatelessWidget {
                           (Book e) => ListTile(
                             title: Text('${e.title}'),
                             subtitle: Text('${e.authorName}'),
+                            trailing: IconButton(
+                              iconSize: 40,
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute<void>(
+                                    builder: (BuildContext context) => BookDetailsPage(e),
+                                  ),
+                                );
+                              },
+                              icon: const Icon(Icons.keyboard_arrow_right),
+                            ),
                           ),
                         )
                         .toList(),
