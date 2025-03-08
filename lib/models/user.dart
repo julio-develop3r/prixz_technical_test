@@ -1,3 +1,4 @@
+import 'package:equatable/equatable.dart';
 import 'package:intl/intl.dart';
 import 'package:json_annotation/json_annotation.dart';
 
@@ -17,7 +18,7 @@ abstract interface class IUser {
 }
 
 @JsonSerializable()
-class UserInfo implements IUser {
+class UserInfo extends Equatable implements IUser {
   const UserInfo({this.names, this.lastNames, this.phone, this.email, this.birthDate, this.gender});
 
   factory UserInfo.fromJson(Map<String, dynamic> json) => _$UserInfoFromJson(json);
@@ -79,4 +80,7 @@ class UserInfo implements IUser {
 
     return edad;
   }
+
+  @override
+  List<Object?> get props => <Object?>[names, lastNames, email, phone, birthDate, gender];
 }

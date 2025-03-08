@@ -1,4 +1,5 @@
 import 'package:app/models/user.dart';
+import 'package:app/modules/user_edit/user_edit_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -7,6 +8,8 @@ import 'cubit/user_info_cubit.dart';
 
 class UserInfoPage extends StatelessWidget {
   const UserInfoPage({super.key});
+
+  static const String route = '/user-info';
 
   @override
   Widget build(BuildContext context) {
@@ -35,46 +38,46 @@ class _View extends StatelessWidget {
           }
 
           return Column(
-            children: [
+            children: <Widget>[
               Expanded(
-                child: Column(
-                  spacing: 16,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Center(
-                      child: Text('User Info', style: Theme.of(context).textTheme.headlineMedium),
-                    ),
-                    Text(
-                      'Names: ${state.userInfo.names ?? 'N/A'}',
-                      style: Theme.of(context).textTheme.titleMedium,
-                    ),
-                    Text(
-                      'Last Names: ${state.userInfo.lastNames ?? 'N/A'}',
-                      style: Theme.of(context).textTheme.titleMedium,
-                    ),
-                    Text(
-                      'Phone: ${state.userInfo.phone ?? 'N/A'}',
-                      style: Theme.of(context).textTheme.titleMedium,
-                    ),
-                    Text(
-                      'Email: ${state.userInfo.email ?? 'N/A'}',
-                      style: Theme.of(context).textTheme.titleMedium,
-                    ),
-                    Text(
-                      'Birth Date: ${_getBirthText(state.userInfo)}',
-                      style: Theme.of(context).textTheme.titleMedium,
-                    ),
-                    Text(
-                      'Gender: ${state.userInfo.gender ?? 'N/A'}',
-                      style: Theme.of(context).textTheme.titleMedium,
-                    ),
-                  ],
+                child: SizedBox(
+                  width: double.infinity,
+                  child: Column(
+                    spacing: 16,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Text(
+                        'First Name: ${state.userInfo.names ?? 'N/A'}',
+                        style: Theme.of(context).textTheme.titleMedium,
+                      ),
+                      Text(
+                        'Last Name: ${state.userInfo.lastNames ?? 'N/A'}',
+                        style: Theme.of(context).textTheme.titleMedium,
+                      ),
+                      Text(
+                        'Phone Number: ${state.userInfo.phone ?? 'N/A'}',
+                        style: Theme.of(context).textTheme.titleMedium,
+                      ),
+                      Text(
+                        'Email: ${state.userInfo.email ?? 'N/A'}',
+                        style: Theme.of(context).textTheme.titleMedium,
+                      ),
+                      Text(
+                        'Birth Date: ${_getBirthText(state.userInfo)}',
+                        style: Theme.of(context).textTheme.titleMedium,
+                      ),
+                      Text(
+                        'Gender: ${state.userInfo.gender ?? 'N/A'}',
+                        style: Theme.of(context).textTheme.titleMedium,
+                      ),
+                    ],
+                  ),
                 ),
               ),
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
-                  onPressed: () => context.go('/user-edit'),
+                  onPressed: () => context.go(UserEditPage.route),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.green,
                     foregroundColor: Colors.white,

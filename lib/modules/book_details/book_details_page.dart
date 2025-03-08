@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 class BookDetailsPage extends StatelessWidget {
   const BookDetailsPage(this.book, {super.key});
 
+  static const String route = '/book-details';
+
   final Book book;
 
   @override

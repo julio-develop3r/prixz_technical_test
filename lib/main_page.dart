@@ -1,3 +1,6 @@
+import 'package:app/modules/books/books_page.dart';
+import 'package:app/modules/user_edit/user_edit_page.dart';
+import 'package:app/modules/user_info/user_info_page.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -29,7 +32,7 @@ class MainPage extends StatelessWidget {
                 leading: const Icon(Icons.book),
                 onTap: () {
                   context.pop();
-                  context.go('/books');
+                  context.go(BooksPage.route);
                 },
               ),
               ListTile(
@@ -37,7 +40,7 @@ class MainPage extends StatelessWidget {
                 leading: const Icon(Icons.edit),
                 onTap: () {
                   context.pop();
-                  context.go('/user-edit');
+                  context.go(UserEditPage.route);
                 },
               ),
               ListTile(
@@ -45,7 +48,7 @@ class MainPage extends StatelessWidget {
                 leading: const Icon(Icons.person),
                 onTap: () {
                   context.pop();
-                  context.go('/user-info');
+                  context.go(UserInfoPage.route);
                 },
               ),
             ],

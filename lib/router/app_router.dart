@@ -22,7 +22,7 @@ class AppRouter {
 
   void _initialize() {
     router = GoRouter(
-      initialLocation: '/books',
+      initialLocation: BooksPage.route,
       routes: <RouteBase>[
         ShellRoute(
           builder: (_, GoRouterState state, Widget child) {
@@ -34,24 +34,24 @@ class AppRouter {
           },
           routes: <RouteBase>[
             GoRoute(
-              path: '/books',
+              path: BooksPage.route,
               name: 'Books',
               builder: (_, __) => const BooksPage(), //
             ),
             GoRoute(
-              path: '/user-edit',
+              path: UserEditPage.route,
               name: 'User Edit',
               builder: (_, __) => const UserEditPage(),
             ),
             GoRoute(
-              path: '/user-info',
+              path: UserInfoPage.route,
               name: 'User Info',
               builder: (_, __) => const UserInfoPage(),
             ),
           ],
         ),
         GoRoute(
-          path: '/book-details',
+          path: BookDetailsPage.route,
           name: 'Book Details',
           builder: (_, GoRouterState state) => BookDetailsPage(state.extra as Book),
         ),

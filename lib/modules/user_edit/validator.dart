@@ -1,39 +1,37 @@
 mixin Validator {
-  String? validateNoEmpty(String? value) {
-    final String v = value?.trim() ?? '';
+  String? validateOnlyLetters(String? value) {
+    final RegExp regExp = RegExp(r'^[a-zA-ZáéíóúÁÉÍÓÚ\s]+$');
 
-    if (v.isEmpty) {
-      return 'enter_valid_value';
+    if (value == null || value.isEmpty) {
+      return 'Please enter a name';
+    } else if (!regExp.hasMatch(value)) {
+      return 'Only letters, accents, and spaces are allowed';
     }
 
     return null;
   }
 
-  // String? validateEmail(String? value) {
-  //   if (value == null || value.isEmpty) {
-  //     return 'Email is required';
-  //   } else if (!RegExp(r'^.+@[a-zA-Z]+\.{1}[a-zA-Z]+(\.{0,1}[a-zA-Z]+)$').hasMatch(value)) {
-  //     return 'Please enter a valid email';
-  //   }
-  //   return null;
-  // }
+  String? validatePhone(String? value) {
+    final RegExp regExp = RegExp(r'^\d{10}$');
 
-  // String? validatePassword(String? value) {
-  //   if (value == null || value.isEmpty) {
-  //     return 'Password is required';
-  //   } else if (value.length < 6) {
-  //     return 'Password must be at least 6 characters';
-  //   }
-  //   return null;
-  // }
+    if (value == null || value.isEmpty) {
+      return 'Please enter a phone number';
+    } else if (!regExp.hasMatch(value)) {
+      return 'Phone number must contain exactly 10 digits';
+    }
 
-  // Confirm password validation
-  // String? validateConfirmPassword(String? value, String password) {
-  //   if (value == null || value.isEmpty) {
-  //     return 'Confirm password is required';
-  //   } else if (value != password) {
-  //     return 'Confirm password does not match';
-  //   }
-  //   return null;
-  // }
+    return null;
+  }
+
+  String? validateEmail(String? value) {
+    final RegExp regExp = RegExp(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$');
+
+    if (value == null || value.isEmpty) {
+      return 'Please enter an email';
+    } else if (!regExp.hasMatch(value)) {
+      return 'Please enter a valid email address';
+    }
+
+    return null;
+  }
 }

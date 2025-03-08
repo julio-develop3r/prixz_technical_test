@@ -1,4 +1,5 @@
 import 'package:app/models/book.dart';
+import 'package:app/modules/book_details/book_details_page.dart';
 import 'package:app/repositories/books_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -8,6 +9,8 @@ import 'bloc/books_bloc.dart';
 
 class BooksPage extends StatelessWidget {
   const BooksPage({super.key});
+
+  static const String route = '/books';
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +31,7 @@ class _View extends StatelessWidget {
         if (state is! BooksLoaded) {
           return const CircularProgressIndicator();
         }
-        
+
         return Column(
           children: <Widget>[
             SizedBox(
@@ -69,7 +72,7 @@ class _View extends StatelessWidget {
                             subtitle: Text('${e.authorName}'),
                             trailing: IconButton(
                               iconSize: 40,
-                              onPressed: () => context.push('/book-details', extra: e),
+                              onPressed: () => context.push(BookDetailsPage.route, extra: e),
                               icon: const Icon(Icons.keyboard_arrow_right),
                             ),
                           ),
