@@ -34,6 +34,7 @@ class BooksBloc extends Bloc<BooksEvent, BooksState> {
       emit(BooksLoaded(filterBy: filter, books: books, query: query));
     } catch (e) {
       print('Error fetching books: ${e.toString()}');
+      emit(BooksError(e.toString()));
     }
   }
 }
