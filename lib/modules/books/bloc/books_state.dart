@@ -1,36 +1,41 @@
 part of 'books_bloc.dart';
 
-class BooksState extends Equatable {
-  const BooksState();
+sealed class BooksState extends Equatable {
+  const BooksState({this.query = '', this.filterBy = Filters.title});
+
+  final String query;
+  final Filters filterBy;
 
   @override
   List<Object> get props => <Object>[];
 }
 
-final class BooksInitial extends BooksState {
-  const BooksInitial();
-}
-
 final class BooksLoading extends BooksState {
-  const BooksLoading();
+  const BooksLoading({required super.query, required super.filterBy});
 }
 
 final class BooksLoaded extends BooksState {
-  const BooksLoaded({required this.books, required this.filterBy, this.query = ''});
+  const BooksLoaded({
+    required this.books, //
+    super.filterBy,
+    super.query,
+  });
 
   final List<Book> books;
-  final Filters filterBy;
-  final String query;
 
   @override
   List<Object> get props => <Object>[books, filterBy, query];
 }
 
 final class BooksError extends BooksState {
-  const BooksError(this.error);
+  const BooksError({
+    required this.error, //
+    super.query,
+    super.filterBy,
+  });
 
   final String error;
 
   @override
-  List<Object> get props => <Object>[error];
+  List<Object> get props => <Object>[error, query, filterBy];
 }
