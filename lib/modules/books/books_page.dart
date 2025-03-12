@@ -48,6 +48,10 @@ class _ListWidget extends StatelessWidget {
     return Expanded(
       child: BlocBuilder<BooksBloc, BooksState>(
         builder: (_, BooksState state) {
+          if (state is BooksError) {
+            return Center(child: Text('Error: ${state.error}'));
+          }
+
           if (state is! BooksLoaded) {
             return const Center(child: CircularProgressIndicator());
           }
